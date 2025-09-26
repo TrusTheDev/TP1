@@ -20,6 +20,8 @@ Ingrese una dimension: 4
 *)
 
 procedure generarCaracter(caracter: char; dimension: integer);
+(* Que hace: dibuja los caracteres de la piramide
+*)
 begin
     if dimension = 1 then
      write(caracter)
@@ -32,6 +34,8 @@ begin
 end;
 
 procedure generarEspacios(espacios: integer);
+(* Que hace: genera los espacios de la piramide
+*)
 begin
   if (espacios = 1) or (espacios = 0) then
      write(' ')
@@ -43,12 +47,31 @@ begin
   end;
 
 procedure crearTriangulo(caracter: char; dimension,aux: integer);
+(* Que hace: llama a los procedimientos necesarios para hacer una piramide.
+   genera espacios, y dibuja caracteres
+*)
 begin
   generarEspacios(aux);
   generarCaracter(caracter, dimension);
 end;
 
+procedure generarEspaciado(cantidad: integer);
+(* Que hace: genera espacios verticalmenteT para que la información sea más visible.
+*)
+begin
+  if cantidad = 1 then
+       writeln('')
+  else
+  begin
+    writeln('');
+    generarEspaciado(cantidad - 1)
+  end;
+end;
+
 procedure TrianguloDeCaracterRecursivo(caracter: char; dimension,aux: integer);
+(* Que hace: Dibuja un triangulo de manera recursiva
+   compuesto del caracter dado y la dimension.
+*)
   begin
     if dimension = 1 then
          crearTriangulo(caracter, dimension,aux)
@@ -60,20 +83,11 @@ procedure TrianguloDeCaracterRecursivo(caracter: char; dimension,aux: integer);
     end;
   end;
 
-procedure generarEspaciado(cantidad: integer);
+procedure TriangulosRecursivos(caracter: char; dimension: integer);
 begin
-  if cantidad = 1 then
-       writeln('')
-  else
-  begin
-    writeln('');
-    generarEspaciado(cantidad - 1)
-  end;
-end;
-
-
-procedure Tri(caracter: char; dimension: integer);
-begin
+  (*
+    Que hace: Dibuja de manera recursiva triangulos según la dimension dada
+  *)
   if dimension = 1 then
        begin
        TrianguloDeCaracterRecursivo(caracter,1,1);
@@ -83,16 +97,22 @@ begin
   begin
        TrianguloDeCaracterRecursivo(caracter,dimension,1);
        generarEspaciado(3);
-       Tri(caracter, dimension - 1);
+       TriangulosRecursivos(caracter, dimension - 1);
   end;
 end;
 
 
 (* Solucion iterativa
+procedure piramideIterativa(caracter: char, dimension: integer);
+(* Que hace: crea una piramide pero de manera iterativa, notese que
+la solución utiliza 3 contadores, esa fue una pista clave para utilizar
+otro contador llamado aux en la solución recursiva puesto que la cantidad de
+espacios no depende de la dimensión de la piramide, sino que es un contador a parte
+que indica las veces que se provocó una auto-invocación.
+*)
 var
-  i,j,k,dimension,espacios: integer;
+  i,j,k,espacios: integer;
 BEGIN
-  dimension := 4;
   espacios := dimension;
 
   for i := 1 to dimension do
@@ -102,17 +122,33 @@ BEGIN
             write(' ');
         for k := 1 to i do
             begin
-            write('x');
+            write(caracter);
             write(' ');
             end;
         writeln('');
         espacios := espacios - 1;
-
+      writeln('');
       end;
 END.
 *)
-
+var
+   caracter: char;
+   dimension: integer;
 begin
-  Tri('x', 5);
+
+  (*
+    Programa principal.
+  *)
+  //piramideIteraiva(caracter, dimension);
+  write('Ingrese un carácter: ');
+  ReadLn(caracter);
+  write('Ingrese la dimensión de la pirámide ');
+  ReadLn(dimension);
+  TriangulosRecursivos(caracter, dimension);
+
+
+
+
+
 end.
 
