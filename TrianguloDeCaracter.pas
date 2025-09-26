@@ -42,27 +42,50 @@ begin
     end;
   end;
 
-procedure crearTriangulo(caracter: char; dimension: integer);
-var
-  espacios: integer;
+procedure crearTriangulo(caracter: char; dimension,aux: integer);
 begin
-  espacios := dimension;
-
-  generarEspacios(espacios);
+  generarEspacios(aux);
   generarCaracter(caracter, dimension);
 end;
 
-procedure TrianguloDeCaracterRecursivo(caracter: char; dimension: integer);
+procedure TrianguloDeCaracterRecursivo(caracter: char; dimension,aux: integer);
   begin
     if dimension = 1 then
-         crearTriangulo(caracter, 1)
+         crearTriangulo(caracter, dimension,aux)
     else
     begin
-         TrianguloDeCaracterRecursivo(caracter,dimension - 1);
+         TrianguloDeCaracterRecursivo(caracter,dimension - 1, aux + 1);
          writeln('');
-         crearTriangulo(caracter,dimension)
+         crearTriangulo(caracter,dimension, aux)
     end;
   end;
+
+procedure generarEspaciado(cantidad: integer);
+begin
+  if cantidad = 1 then
+       writeln('')
+  else
+  begin
+    writeln('');
+    generarEspaciado(cantidad - 1)
+  end;
+end;
+
+
+procedure Tri(caracter: char; dimension: integer);
+begin
+  if dimension = 1 then
+       begin
+       TrianguloDeCaracterRecursivo(caracter,1,1);
+       generarEspaciado(1);
+       end
+  else
+  begin
+       TrianguloDeCaracterRecursivo(caracter,dimension,1);
+       generarEspaciado(3);
+       Tri(caracter, dimension - 1);
+  end;
+end;
 
 
 (* Solucion iterativa
@@ -90,6 +113,6 @@ END.
 *)
 
 begin
-  TrianguloDeCaracterRecursivo('x', 5);
+  Tri('x', 5);
 end.
 
