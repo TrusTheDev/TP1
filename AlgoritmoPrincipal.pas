@@ -1,4 +1,4 @@
-         program TriangulosDecrecientesM;
+  program TriangulosDecrecientesM;
 {$mode objfpc}{$H+}
 
 uses
@@ -6,222 +6,208 @@ uses
 
 const
   MAX_POR_LOTE = 5;
+  MAX_DIMENSION = 5;
 
-procedure ImprimirRepetido(caracter: caracterar; n: integer);
-                        (*
-  PROCEdimensionIENTO ImprimirRepetido(caracter: caracterar; n: integer)
-
-  Qu� hace:
-    Imprime en la salida est�ndar (con write) el car�cter `caracter` repetido `n` veces
-    seguidas, sin a�adir salto de l�nea al final.
-
-  Precondici�n:
-    n >= 0. (Si n = 0 no imprime nada.)
-
-  Postcondici�n:
-    En la salida est�ndar se habr�n escrito exactamente `n` apariciones del
-    car�cter `caracter` (en la misma l�nea). No modifica variables ni estructuras
-    fuera del procedimensioniento.
+{-----------------------------------------------------------}
+procedure ImprimirRepetido(ch: char; n: integer);
+(*
+  Qué hace:
+    Imprime el carácter `ch` repetido `n` veces seguidas en la misma línea.
+  Precondición:
+    n >= 0.
+  Postcondición:
+    En pantalla aparecen exactamente `n` repeticiones de `ch`.
 *)
-
 var
   i: integer;
 begin
   for i := 1 to n do
-    write(caracter);
+    write(ch);
 end;
 
-procedure ImprimirFilaConEspacios(caracter: caracterar; n: integer);
-                (*
-  PROCEdimensionIENTO ImprimirFilaConEspacios(caracter: caracterar; n: integer)
-
-  Qu� hace:
-    Imprime en la salida `n` veces el car�cter `caracter` separados por un �nico
-    espacio entre ellos, sin salto de l�nea al final. Evita dejar un espacio
-    adicional al final de la secuencia (si n >= 1).
-
-  Precondici�n:
-    n >= 0. (Si n = 0 no imprime nada; si n = 1 imprime solo `caracter`.)
-
-  Postcondici�n:
-    En la salida est�ndar se habr� escrito la secuencia:
-      caracter[ + ' ' + caracter + ... ]  (n veces caracter y n-1 espacios entre ellos).
-    No produce salto de l�nea.
+{-----------------------------------------------------------}
+procedure ImprimirFilaConEspacios(ch: char; n: integer);
+(*
+  Qué hace:
+    Imprime `n` veces el carácter `ch` separados por un espacio.
+  Precondición:
+    n >= 0.
+  Postcondición:
+    Se muestran `n` caracteres separados por espacio en la misma línea.
 *)
 var
-  i: integer;
+  i: integer; 
 begin
   for i := 1 to n do
   begin
-    write(caracter);
-    if i < n then write(' ');
+    write(ch);
+    if i < n then
+      write(' ');
   end;
 end;
 
-// DibujarTrianguloRec:
-// - caracter: caracter a imprimir
-// - fila: fila actual (empieza en 1)
-// - base: base del tri�ngulo (n�mero m�ximo de filas para este tri�ngulo)
-// - anchoMaximo: dimensionensi�n m�xima usada para alineaci�n (la dimensionensi�n inicial)
-procedure DibujarTrianguloRec(caracter: caracterar; fila, base, anchoMaximo: integer);
-                 (*
-  PROCEdimensionIENTO DibujarTrianguloRec(caracter: caracterar; fila, base, anchoMaximo
-: integer)
-
-  Qu� hace:
-    Dibuja (por salida est�ndar) las filas `fila, fila+1, ..., base` de un
-    tri�ngulo cuyo n�mero de filas es `base`. Cada fila i contiene i veces
-    el car�cter `caracter` separados por un espacio, y est� alineada a la derecaractera
-    respecto a la ancaracterura `anchoMaximo
-  `.
-
-    Es decir, la cantidad de espacios iniciales en la fila i es (anchoMaximo
-   - i).
-
-  Precondici�n:
-    1 <= fila <= base <= anchoMaximo
-    (en el uso correcto del programa)
-    base >= 1, anchoMaximo
-   >= 1, fila >= 1.
-
-  Postcondici�n:
-    Se imprimieron por pantalla (en orden) las filas `fila..base` del tri�ngulo,
-    cada una en su propia l�nea y alineadas con respecto a `anchoMaximo
-  `. No
-    devuelve valor; su efecto es exclusivamente la salida por consola.
-
-  Caso base (recursi�n):
-    Si fila > base entonces no hace nada (termina la recursi�n).
-
-  Caso recursivo:
-    Imprime la fila `fila` y llama a DibujarTrianguloRec(caracter, fila+1, base, anchoMaximo
-  ).
+{-----------------------------------------------------------}
+procedure DibujarTrianguloRec(ch: char; fila, base, maxWidth: integer);
+(*
+  Qué hace:
+    Dibuja un triángulo de base `base` alineado a la derecha con `maxWidth`.
+  Precondición:
+    1 <= fila <= base <= maxWidth.
+  Postcondición:
+    Se imprime el triángulo desde fila hasta base.
 *)
-
 begin
   if fila > base then
-    exit; // caso base
+    exit;
 
-  // USAMOS anchoMaximo
- para alinear respecto al tri�ngulo mayor
-  ImprimirRepetido(' ', anchoMaximo
- - fila);
-
-  ImprimirFilaConEspacios(caracter, fila);
+  ImprimirRepetido(' ', maxWidth - fila);
+  ImprimirFilaConEspacios(ch, fila);
   writeln;
 
-  DibujarTrianguloRec(caracter, fila + 1, base, anchoMaximo
-);
+  DibujarTrianguloRec(ch, fila + 1, base, maxWidth);
 end;
 
-// DibujarLoteRec ahora recibe anchoMaximo para pasarla a cada tri�ngulo
-function DibujarLoteRec(caracter: caracterar; dimension, k, anchoMaximo: integer): integer;
-   (*
-  FUNCI�N DibujarLoteRec(caracter: caracterar; dimension, k, anchoMaximo
-: integer): integer
-
-  Qu� hace:
-    Dibuja hasta `k` tri�ngulos decrecientes empezando por la base `dimension`,
-    luego `dimension-1`, ..., utilizando `anchoMaximo
-  ` como referencia de alineaci�n
-    para cada tri�ngulo (es decir, todos los tri�ngulos se alinean respecto
-    al pico del tri�ngulo mayor). Llama internamente a DibujarTrianguloRec.
-
-    Devuelve la pr�xima dimensionensi�n pendiente tras dibujar el lote:
-      - Si k >= dimension, dibuja todos los tri�ngulos desde dimension hasta 1 y devuelve 0.
-      - Si k < dimension, dibuja k tri�ngulos (dimension, dimension-1, ..., dimension-k+1) y devuelve dimension - k.
-
-  Precondici�n:
-    dimension >= 0, k >= 0, anchoMaximo
-   >= dimension.
-    (En el uso normal del programa: 1 <= dimension <= anchoMaximo
-   y k >= 1.)
-
-  Postcondici�n:
-    - Se imprimieron por la salida hasta min(k, dimension) tri�ngulos.
-    - La funci�n retorna el entero `dimension_remanente` = dimension - min(k, dimension)
-      (es decir, la nueva dimensionensi�n pendiente).
-    - No modifica variables externas salvo la salida por consola.
-
-  Caso base (recursi�n):
-    Si dimension <= 0 o k <= 0: no dibuja nada y devuelve dimension (termina la recursi�n).
-
-  Caso recursivo:
-    Dibuja el tri�ngulo con base `dimension`, realiza separaci�n visual y llama a
-    DibujarLoteRec(caracter, dimension-1, k-1, anchoMaximo
-  ), devolviendo su resultado.
+{-----------------------------------------------------------}
+function DibujarLoteRec(ch: char; dim, k, maxWidth: integer): integer;
+(*
+  Qué hace:
+    Dibuja un lote de hasta `k` triángulos decrecientes desde `dim`.
+  Precondición:
+    dim >= 0, k >= 0, maxWidth >= dim.
+  Postcondición:
+    Devuelve la dimensión remanente tras dibujar el lote.
 *)
 begin
-  if (dimension <= 0) or (k <= 0) then
+  if (dim <= 0) or (k <= 0) then
   begin
-    Result := dimension;
+    Result := dim;
     exit;
   end;
 
-  // dibuja tri�ngulo de dimensionensi�n 'dimension', alineado seg�n anchoMaximo
+  DibujarTrianguloRec(ch, 1, dim, maxWidth);
+  writeln;
 
-  DibujarTrianguloRec(caracter, 1, dimension, anchoMaximo
-);
-
-  writeln; // separaci�n visual
-
-  Result := DibujarLoteRec(caracter, dimension - 1, k - 1, anchoMaximo
-);
+  Result := DibujarLoteRec(ch, dim - 1, k - 1, maxWidth);
 end;
 
+{-----------------------------------------------------------}
+function LeerCaracter: char;
+(*
+  Qué hace:
+    Solicita al usuario un carácter.
+  Precondición:
+    Ninguna.
+  Postcondición:
+    Devuelve el carácter ingresado o '*' si no se ingresó nada.
+*)
 var
   input: string;
-  caracter: caracterar;
-  dimension, proxdimension: integer;
+begin
+  write('Ingrese un caracter: ');
+  readln(input);
+  input := Trim(input);
+  if input = '' then
+    Result := '*'
+  else
+    Result := input[1];
+end;
+
+{-----------------------------------------------------------}
+function LeerDimension: integer;
+(*
+  Qué hace:
+    Solicita al usuario una dimensión entre 1 y MAX_DIMENSION.
+  Precondición:
+    Ninguna.
+  Postcondición:
+    Devuelve una dimensión válida en el rango.
+    Si es > MAX_DIMENSION muestra "no disponible" y devuelve -1.
+*)
+var
+  dim: integer;
+begin
+  write('Ingrese una dimension (1..', MAX_DIMENSION, '): ');
+  readln(dim);
+  if (dim < 1) then
+  begin
+    writeln('Dimensión inválida. Debe ser mayor a 0.');
+    Result := -1;
+  end
+  else if (dim > MAX_DIMENSION) then
+  begin
+    writeln('Dimensión no disponible. Solo se permiten de 1 a ', MAX_DIMENSION, '.');
+    Result := -1;
+  end
+  else
+    Result := dim;
+end;
+
+{-----------------------------------------------------------}
+function PreguntarSi(mensaje: string): boolean;
+(*
+  Qué hace:
+    Pregunta al usuario una respuesta S/N.
+  Precondición:
+    Ninguna.
+  Postcondición:
+    Devuelve TRUE si la respuesta comienza con 'S', FALSE en otro caso.
+*)
+var
   respuesta: string;
-  continuarLote: boolean;
+begin
+  write(mensaje, ' S/N: ');
+  readln(respuesta);
+  respuesta := Trim(respuesta);
+  if (Length(respuesta) > 0) and (UpCase(respuesta[1]) = 'S') then
+    Result := True
+  else
+    Result := False;
+end;
+
+{===========================================================}
+{ PROGRAMA PRINCIPAL }
+(*
+  Qué hace:
+    Permite al usuario dibujar triángulos decrecientes alineados.
+    Solo admite dimensiones hasta MAX_DIMENSION. Maneja lotes
+    de hasta MAX_POR_LOTE triángulos por vez y consulta al
+    usuario si desea continuar dibujando.
+  Precondición:
+    Ninguna.
+  Postcondición:
+    El programa finaliza cuando el usuario responde 'N' en
+    las consultas de continuar.
+*)
+var
+  ch: char;
+  dim, proxDim: integer;
+  continuarLote, continuarPrograma: boolean;
 begin
   writeln('--- Triangulos decrecientes (recursivo, lotes de hasta ', MAX_POR_LOTE, ') ---');
 
-  repeat
-    write('Ingrese un caracter: ');
-    readln(input);
-    input := Trim(input);
-    if input = '' then
-      caracter := '*'
-    else
-      caracter := input[1];
+  continuarPrograma := True;
+  while continuarPrograma do
+  begin
+    ch := LeerCaracter;
+    dim := LeerDimension;
 
-    repeat
-      write('Ingrese una dimensionension (entera positiva): ');
-      readln(dimension);
-      if dimension <= 0 then
-        writeln('dimensionension invalida. Debe ser un entero > 0.');
-    until dimension > 0;
-
-    // Ahora pasamos dimension como anchoMaximo
-   para mantener la alineacion
-    proxdimension := dimension;
-    continuarLote := True;
-    while (proxdimension >= 1) and (continuarLote) do
+    if dim > 0 then
     begin
-      // <-- aqui pasamos 'dimension' como anchoMaximo
-    
-      proxdimension := DibujarLoteRec(caracter, proxdimension, MAX_POR_LOTE, dimension);
-
-      if proxdimension >= 1 then
+      proxDim := dim;
+      continuarLote := True;
+      while (proxDim >= 1) and (continuarLote) do
       begin
-        write('Quedan tri�ngulos (hasta dimensionension ', proxdimension, '). �Desea dibujar otro lote? S/N: ');
-        readln(respuesta);
-        respuesta := Trim(respuesta);
-        if (Length(respuesta) > 0) and (UpCase(respuesta[1]) = 'N') then
-          continuarLote := False;
-      end
-      else
-        writeln('Se completaron todos los tri�ngulos de la dimensionension solicitada.');
+        proxDim := DibujarLoteRec(ch, proxDim, MAX_POR_LOTE, dim);
+
+        if proxDim >= 1 then
+          continuarLote := PreguntarSi('Quedan triángulos (hasta dimension ' + IntToStr(proxDim) + '). ¿Desea dibujar otro lote?')
+        else
+          writeln('Se completaron todos los triángulos de la dimensión solicitada.');
+      end;
     end;
 
-    write('Desea iniciar otro dibujo? S/N: ');
-    readln(respuesta);
-    respuesta := Trim(respuesta);
-  until (Length(respuesta) > 0) and (UpCase(respuesta[1]) = 'N');
+    continuarPrograma := PreguntarSi('¿Desea iniciar otro dibujo?');
+  end;
 
   writeln('Fin. Gracias.');
 end.
-
-
