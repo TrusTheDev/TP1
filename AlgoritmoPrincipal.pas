@@ -8,72 +8,94 @@ const
   MAX_POR_LOTE = 5;
   MAX_DIMENSION = 5;
 
-{-----------------------------------------------------------}
-procedure ImprimirRepetido(ch: char; n: integer);
-(*
-  Qué hace:
-    Imprime el carácter `ch` repetido `n` veces seguidas en la misma línea.
-  Precondición:
-    n >= 0.
-  Postcondición:
-    En pantalla aparecen exactamente `n` repeticiones de `ch`.
+procedure generarEspacios(espacios: integer);
+(* Que hace: genera los espacios de la piramide
 *)
-var
-  i: integer;
 begin
-  for i := 1 to n do
-    write(ch);
-end;
-
-{-----------------------------------------------------------}
-procedure ImprimirFilaConEspacios(ch: char; n: integer);
-(*
-  Qué hace:
-    Imprime `n` veces el carácter `ch` separados por un espacio.
-  Precondición:
-    n >= 0.
-  Postcondición:
-    Se muestran `n` caracteres separados por espacio en la misma línea.
-*)
-var
-  i: integer; 
-begin
-  for i := 1 to n do
-  begin
-    write(ch);
-    if i < n then
-      write(' ');
+  if (espacios = 1) or (espacios = 0) then
+     write(' ')
+  else
+    begin
+      generarEspacios(espacios - 1);
+      write(' ')
+    end;
   end;
+
+  procedure generarCaracter(caracter: char; dimension: integer);
+(* Que hace: dibuja los caracteres de la piramide
+*)
+begin
+    if dimension = 1 then
+     write(caracter)
+  else
+    begin
+      write(caracter);
+      write(' ');
+      generarCaracter(caracter, dimension - 1);
+    end;
+end;
+
+procedure crearTriangulo(caracter: char; dimension,aux: integer);
+(* Que hace: llama a los procedimientos necesarios para hacer una piramide.
+   genera espacios, y dibuja caracteres
+*)
+begin
+  generarEspacios(aux);
+  generarCaracter(caracter, dimension);
 end;
 
 {-----------------------------------------------------------}
-procedure DibujarTrianguloRec(ch: char; fila, base, maxWidth: integer);
+procedure ImprimirRepetido(caracter: char; n: integer);
 (*
   Qué hace:
-    Dibuja un triángulo de base `base` alineado a la derecha con `maxWidth`.
+    Imprime el carácter `caracter` repetido `n` veces seguidas en la misma línea.
   Precondición:
-    1 <= fila <= base <= maxWidth.
+    n >= 0.
+  Postcondición:
+    En pantalla aparecen exactamente `n` repeticiones de `caracter`.
+*)
+begin
+  if n = 1 then
+    begin
+      write(caracter);
+      exit;
+    end
+  else
+  begin
+    ImprimirRepetido(caracter, n - 1);
+    write(caracter);
+  end
+end;
+
+{-----------------------------------------------------------}
+procedure DibujarTrianguloRec(caracter: char; fila, base, MAXancho: integer);
+(*
+  Qué hace:
+    Dibuja un triángulo de base `base` alineado a la derecaractera con `MAXancho`.
+  Precondición:
+    1 <= fila <= base <= MAXancho.
   Postcondición:
     Se imprime el triángulo desde fila hasta base.
 *)
 begin
-  if fila > base then
+  if fila = base then
     exit;
 
-  ImprimirRepetido(' ', maxWidth - fila);
-  ImprimirFilaConEspacios(ch, fila);
+  crearTriangulo(caracter, fila, MAXancho - fila);
   writeln;
 
-  DibujarTrianguloRec(ch, fila + 1, base, maxWidth);
+  DibujarTrianguloRec(caracter, fila + 1, base, MAXancho);
 end;
 
+
+
 {-----------------------------------------------------------}
-function DibujarLoteRec(ch: char; dim, k, maxWidth: integer): integer;
+function DibujarLoteRec(caracter: char; dim, k, MAXancho: integer): integer;
 (*
   Qué hace:
     Dibuja un lote de hasta `k` triángulos decrecientes desde `dim`.
   Precondición:
-    dim >= 0, k >= 0, maxWidth >= dim.
+    dim >= 0, k >= 0, MAXancho >= dim.
   Postcondición:
     Devuelve la dimensión remanente tras dibujar el lote.
 *)
@@ -84,10 +106,10 @@ begin
     exit;
   end;
 
-  DibujarTrianguloRec(ch, 1, dim, maxWidth);
+  DibujarTrianguloRec(caracter, 1, dim, MAXancho);
   writeln;
 
-  Result := DibujarLoteRec(ch, dim - 1, k - 1, maxWidth);
+  Result := DibujarLoteRec(caracter, dim - 1, k - 1, MAXancho);
 end;
 
 {-----------------------------------------------------------}
@@ -179,7 +201,7 @@ end;
     las consultas de continuar.
 *)
 var
-  ch: char;
+  caracter: char;
   dim, proxDim: integer;
   continuarLote, continuarPrograma: boolean;
 begin
@@ -188,7 +210,7 @@ begin
   continuarPrograma := True;
   while continuarPrograma do
   begin
-    ch := LeerCaracter;
+    caracter := LeerCaracter;
     dim := LeerDimension;
 
     if dim > 0 then
@@ -197,7 +219,7 @@ begin
       continuarLote := True;
       while (proxDim >= 1) and (continuarLote) do
       begin
-        proxDim := DibujarLoteRec(ch, proxDim, MAX_POR_LOTE, dim);
+        proxDim := DibujarLoteRec(caracter, proxDim, MAX_POR_LOTE, dim);
 
         if proxDim >= 1 then
           continuarLote := PreguntarSi('Quedan triángulos (hasta dimension ' + IntToStr(proxDim) + '). ¿Desea dibujar otro lote?')
