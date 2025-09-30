@@ -1,24 +1,24 @@
 program TP_TRIANGULO;
 Var
     //******VARIABLES*****//
-    i, base:integer;
+    base:integer;
     car:char;
 
     //********************************************************************//
     //************************SUBALGORITMOS*******************************//
     //********************************************************************//
 
-    procedure Hacer_caracter_espacio(punt: integer; caracter:char);
+    procedure Hacer_caracter_espacio(punt: integer; punt2:integer; caracter:char);
     (*
     QUE HACE?:
     PRE:
     POS:
     *)
     begin
-        if punt >= 1 then
+        if punt <= punt2 then
         begin
             write(caracter + ' ');
-            Hacer_caracter_espacio(punt - 1, caracter);
+            Hacer_caracter_espacio(punt + 1, punt2, caracter);
         end;
     end;
 
@@ -40,7 +40,7 @@ Var
 
     //********************************************************************//
 
-    procedure Hacer_Triangulo(var dimension:integer ; caracter:char; i:integer);
+    procedure Hacer_Triangulo(base:integer ; dimension:integer ; caracter:char; i:integer; j:integer);
     (*
     QUE HACE?:
     PRE: i=lineas
@@ -49,18 +49,38 @@ Var
     begin
         if dimension >= 1 then
         begin            
-            Hacer_espacios(dimension, i);
+            Hacer_espacios(base, i);
 
-            Hacer_caracter_espacio(i, caracter);
+            Hacer_caracter_espacio(i,j, caracter);
 
-            writeLn(); // cambio de renglon para hacer el proximo triangulo
+            writeLn(); // cambio de renglon para hacer la proxima linea del triangulo
 
-            dimension := dimension - 1;
-
-            Hacer_Triangulo(dimension, caracter, i);
+            Hacer_Triangulo( base-1, dimension - 1, caracter, i , j+1);
         end;
          
     end;
+
+    //*************************************************************************//
+    procedure hacer_lote(base:integer ; caracter:char);
+    (*
+    QUE HACE?:
+    PRE: i=lineas
+    POS:
+    *)
+    var
+        dim, i, j:integer;
+    begin
+            i := 1;
+            j := 1;
+            
+            for dim := base downto 1 do
+            begin
+                Hacer_Triangulo(base, dim, caracter, i, j);
+                writeLn();
+            end;
+
+    end;
+ 
 
     //********************************************************************//
 
@@ -89,33 +109,37 @@ Var
     end;
 
     //*******************************************************************//
-    procedure Entero_en_rango(msj:string; tope1:integer; tope2:integer; var valor:integer);
+    function Entero_en_rango(msj:string; tope1:integer; tope2:integer):integer;
     (*
     QUE HACE?:
     PRE:
     POS:
     *)
+    var
+       valor:integer;
     begin
         repeat
-            writeLn(msj);
+            write(msj);
             readLn (valor);
 
             if (valor < tope1) or (valor > tope2) then
             writeLn('ERROR: valor incorrecto');
 
-        until (valor in [tope1..tope2]);    
+        until (valor in [tope1..tope2]);
+        Entero_en_rango := valor;
     end;
 
 begin //****************************INICIO
     repeat
         //****************************************************//
-        Entero_en_rango('Ingrese la base para la dimension que quiera para su rombo:',0, 5, base);
+        base := Entero_en_rango('Ingrese la base para la dimension que quiera para su rombo:',0, 5);
 
-        writeLn('ingrese un carecter para dibujar el triangulo');
+        write('ingrese un carecter para dibujar el triangulo:');
         readLn (car);
-        
-        i := 1;
-        Hacer_Triangulo(base, car, i);
+
+
+        hacer_lote(base, car)
+
         
 
     until(mensaje('le gustaria ingresar otro lote?:'));
