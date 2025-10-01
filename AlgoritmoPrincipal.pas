@@ -1,8 +1,4 @@
-  program TriangulosDecrecientesM;
-
-
-
-
+program TriangulosDecrecientesM;
 procedure generarEspacios(espacios: integer);
 (* Que hace: genera los espacios de la piramide
 *)
@@ -52,12 +48,14 @@ procedure DibujarTrianguloRec(caracter: char; fila, base, MAXancho: integer);
 *)
 begin
   if fila = base then
-  exit;
-
+  
+else
+begin
   crearTriangulo(caracter, fila, MAXancho - fila);
   writeln;
 
   DibujarTrianguloRec(caracter, fila + 1, base, MAXancho)
+  end;
 end;
 
 
@@ -72,14 +70,13 @@ function DibujarLoteRec(caracter: char; dim,k: integer): integer;
 *)
 begin
   if (dim <= 0) or (k <= 0) then
+    DibujarLoteRec := dim
+else
   begin
-    DibujarLoteRec := dim;
-    exit;
-  end;
-
   DibujarTrianguloRec(caracter, 0, dim, 5);
   writeln;
-  DibujarLoteRec := DibujarLoteRec(caracter, dim - 1, k - 1);
+  DibujarLoteRec := DibujarLoteRec(caracter, dim - 1, k - 1)
+  end;
 end;
 
 
