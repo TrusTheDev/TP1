@@ -40,7 +40,7 @@ end;
 procedure DibujarTrianguloRec(caracter: char; fila, base, MAXancho: integer);
 (*
   Qué hace:
-    Dibuja un triángulo de base 'base' alineado a la derecha con `MAXancho`.
+    Dibuja un triángulo de base 'base' alineado a la derecha con 'MAXancho'.
   Precondición:
     1 <= fila <= base <= MAXancho.
   Postcondición:
@@ -62,7 +62,7 @@ end;
 function DibujarLoteRec(caracter: char; dim,k: integer): integer;
 (*
   Qué hace:
-    Dibuja un lote de hasta `k` triángulos decrecientes desde `dim`.
+    Dibuja un lote de hasta 'k' triángulos decrecientes desde 'dim'.
   Precondición:
     dim >= 0, k >= 0, MAXancho >= dim.
   Postcondición:
