@@ -81,19 +81,19 @@ end;
 
 
 {-----------------------------------------------------------}
-function LeerCaracter: char;
+function LeerCaracter (msj:string): char;
 (*
   Qué hace:
     Solicita al usuario un carácter.
   Precondición:
-    Ninguna.
+    msj = MENSAJE ∈ dato estructurado
   Postcondición:
     Devuelve el carácter ingresado o '*' si no se ingresó nada.
 *)
 var
   input: char;
 begin
-  write('Ingrese un caracter: ');
+  write(msj);
   readln(input);
   if input = '' then
     LeerCaracter := '*'
@@ -102,27 +102,26 @@ begin
 end;
 
 {-----------------------------------------------------------}
-function LeerDimension: integer;
+function LeerDimension(msj:string; tope1:integer; tope2:integer): integer;
 (*
   Qué hace:
-    Solicita al usuario una dimensión entre 1 .
+    Solicita al usuario ingresar un valor
   Precondición:
-    Ninguna.
+    msj = MENSAJE ∈ dato estructurado; tope1 y tope2 ∈ a los parametros ingresados 
   Postcondición:
-    Devuelve una dimensión válida en el rango.
-    Si es  muestra "no disponible" y devuelve -1.
+    Devuelve un valor validado.
 *)
 var
   dimension: integer;
 begin
   repeat
-    write('Ingrese una dimension entre (1 y 5): ');
+    write(msj);
     readln(dimension);
-    if (dimension < 1) OR (dimension > 5)  then
+    if (dimension < tope1) OR (dimension > tope2)  then
     begin
       writeln('ERROR: dimension inválida. se espera que el valor ingresado sea entre 1 y 5.');
     end;   
-  until (dimension in [1..5]);
+  until (dimension in [tope1..tope2]);
   LeerDimension := dimension  
 end;
 
@@ -143,9 +142,9 @@ begin
     until (respuesta in ['s','n','S','N']);
 
     if respuesta in ['n','N'] then
-      Preguntar := TRUE
+      Preguntar := FALSE
     else
-      Preguntar := FALSE;
+      Preguntar := TRUE;
 
 end;
 
@@ -170,15 +169,15 @@ var
   dimension: integer;
   continuarPrograma: boolean;
 begin                                                                 
-  writeln('--- Triangulos decrecientes (recursivo, lotes de hasta ', 5, ') ---');
+  writeln('--- Triangulos decrecientes (recursivo, lotes de hasta 5) ---');
 
   continuarPrograma := True;
   while continuarPrograma do
   begin
-    caracter := LeerCaracter;
-    dimension:= LeerDimension;
+    caracter := LeerCaracter('Ingrese un caracter: ');
+    dimension:= LeerDimension('Ingrese una dimension entre (1 y 5): ', 1,5);
     DibujarLoteRec(caracter,dimension,5);
-    continuarPrograma := not Preguntar('Desea iniciar otro dibujo?')
+    continuarPrograma := Preguntar('Desea iniciar otro dibujo?')
   end;
 
   writeln('{-----Fin del Programa-----}');
