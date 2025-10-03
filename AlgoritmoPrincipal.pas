@@ -61,9 +61,7 @@ procedure DibujarTrianguloRec(caracter: char; fila, base, MAXancho: integer);
     Ninguna.
 *)
 begin
-  if fila = base then
-  
-  else
+  if fila <> base then
   begin
     crearTriangulo(caracter, fila, MAXancho - fila);
     writeln;
@@ -81,9 +79,7 @@ procedure DibujarLoteRec(caracter: char; dimension: integer);
     Ninguna.
 *)
 begin
-  if dimension <= 0 then
-  
-  else
+  if dimension > 0 then
     begin
     DibujarTrianguloRec(caracter, 0, dimension, 5);
     writeln;
