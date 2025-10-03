@@ -2,7 +2,7 @@ program TriangulosDecrecientesM;
 procedure generarEspacios(espacios: integer);
 (* 
   Qué hace?:
-    genera espacios para formar un triangulo de manera recursiva.
+    genera espacios de manera recursiva.
   Precondiciones:
     espacios espacios >=0
   Poscondiciones:
@@ -21,7 +21,7 @@ begin
   procedure generarCaracter(caracter: char; dimension: integer);
 (* 
   Que hace: 
-    dibuja los caracteres de la piramide y añade espacios entre si de manera recursiva.
+    dibuja caracteres y añade espacios entre si de manera recursiva.
   Precondiciones:
     caracter = char, dimension >=0
   Poscondiciones:
@@ -37,7 +37,7 @@ begin
       generarCaracter(caracter, dimension - 1);
     end;
 end;
-
+{---------------------------------------------------------------------}
 procedure crearTriangulo(caracter: char; dimension,espacios: integer);
 (* 
   Que hace: llama a los procedimientos necesarios para hacer una piramide, genera espacios y dibuja caracteres
@@ -50,7 +50,6 @@ begin
   generarEspacios(espacios);
   generarCaracter(caracter, dimension);
 end;
-
 {---------------------------------------------------------------------}
 procedure DibujarTrianguloRec(caracter: char; fila, base, MAXancho: integer);
 (*
@@ -71,7 +70,6 @@ begin
     DibujarTrianguloRec(caracter, fila + 1, base, MAXancho)
   end;
 end;
-
 {---------------------------------------------------------------------}
 procedure DibujarLoteRec(caracter: char; dimension: integer);
 (*
@@ -84,7 +82,7 @@ procedure DibujarLoteRec(caracter: char; dimension: integer);
 *)
 begin
   if dimension <= 0 then
-    
+  
   else
     begin
     DibujarTrianguloRec(caracter, 0, dimension, 5);
@@ -187,7 +185,6 @@ begin
     DibujarLoteRec(caracter,dimension);
     continuarPrograma := Preguntar('Desea iniciar otro dibujo?')
   end;
-
   writeln('{-----Fin del Programa-----}');
   readLn();
 end.
