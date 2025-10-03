@@ -1,6 +1,12 @@
 program TriangulosDecrecientesM;
 procedure generarEspacios(espacios: integer);
-(* Que hace: genera los espacios de la piramide
+(* 
+  Qué hace?:
+    genera espacios para formar un triangulo de manera recursiva.
+  Precondiciones:
+    espacios espacios >=0
+  Poscondiciones:
+    Ninguna. 
 *)
 begin
   if espacios = 0 then
@@ -11,9 +17,15 @@ begin
       write(' ')
     end;
   end;
-
+{---------------------------------------------------------------------}
   procedure generarCaracter(caracter: char; dimension: integer);
-(* Que hace: dibuja los caracteres de la piramide
+(* 
+  Que hace: 
+    dibuja los caracteres de la piramide y añade espacios entre si de manera recursiva.
+  Precondiciones:
+    caracter = char, dimension >=0
+  Poscondiciones:
+    Ninguna. 
 *)
 begin
     if dimension = 0 then
@@ -26,60 +38,60 @@ begin
     end;
 end;
 
-procedure crearTriangulo(caracter: char; dimension,aux: integer);
-(* Que hace: llama a los procedimension
-ientos necesarios para hacer una piramide.
-   genera espacios, y dibuja caracteres
+procedure crearTriangulo(caracter: char; dimension,espacios: integer);
+(* 
+  Que hace: llama a los procedimientos necesarios para hacer una piramide, genera espacios y dibuja caracteres
+  Precondiciones:
+    caracter = Char,dimension >= 0, espacios > 0 y espacios <> dimension.
+  Poscondiciones: 
+    Ninguna.
 *)
 begin
-  generarEspacios(aux);
+  generarEspacios(espacios);
   generarCaracter(caracter, dimension);
 end;
 
-{-----------------------------------------------------------}
+{---------------------------------------------------------------------}
 procedure DibujarTrianguloRec(caracter: char; fila, base, MAXancho: integer);
 (*
-  Qué hace:
+  Qué hace: 
     Dibuja un triángulo de base 'base' alineado a la derecha con 'MAXancho'.
   Precondición:
-    1 <= fila <= base <= MAXancho.
+    caracter = Char,  0 <= fila <= base, MAXancho = maxancho.
   Postcondición:
-    Se imprime el triángulo desde fila hasta base.
+    Ninguna.
 *)
 begin
   if fila = base then
   
-else
-begin
-  crearTriangulo(caracter, fila, MAXancho - fila);
-  writeln;
-
-  DibujarTrianguloRec(caracter, fila + 1, base, MAXancho)
+  else
+  begin
+    crearTriangulo(caracter, fila, MAXancho - fila);
+    writeln;
+    DibujarTrianguloRec(caracter, fila + 1, base, MAXancho)
   end;
 end;
 
-
-function DibujarLoteRec(caracter: char; dim,k: integer): integer;
+{---------------------------------------------------------------------}
+procedure DibujarLoteRec(caracter: char; dimension: integer);
 (*
   Qué hace:
-    Dibuja un lote de hasta 'k' triángulos decrecientes desde 'dim'.
+    Dibuja un lote de hasta 1 triángulos decrecientes desde 'dimension'.
   Precondición:
-    dim >= 0, k >= 0, MAXancho >= dim.
+    dimension >= 0.
   Postcondición:
-    Devuelve la dimensión remanente tras dibujar el lote.
+    Ninguna.
 *)
 begin
-  if (dim <= 0) or (k <= 0) then
-    DibujarLoteRec := dim
-else
-  begin
-  DibujarTrianguloRec(caracter, 0, dim, 5);
-  writeln;
-  DibujarLoteRec := DibujarLoteRec(caracter, dim - 1, k - 1)
-  end;
+  if dimension <= 0 then
+    
+  else
+    begin
+    DibujarTrianguloRec(caracter, 0, dimension, 5);
+    writeln;
+    DibujarLoteRec(caracter, dimension - 1)
+    end;
 end;
-
-
 {-----------------------------------------------------------}
 function LeerCaracter (msj:string): char;
 (*
@@ -100,16 +112,15 @@ begin
   else
     LeerCaracter := input;
 end;
-
 {-----------------------------------------------------------}
 function LeerDimension(msj:string; tope1:integer; tope2:integer): integer;
 (*
-  Qué hace:
-    Solicita al usuario ingresar un valor
-  Precondición:
-    msj = MENSAJE ∈ dato estructurado; tope1 y tope2 ∈ a los parametros ingresados 
-  Postcondición:
-    Devuelve un valor validado.
+Qué hace:
+  Solicita al usuario ingresar un valor entre 1 y 5
+Precondición:
+  msj = MENSAJE ∈ dato estructurado; tope1 y tope2 ∈ a los parametros ingresados 
+Postcondición:
+  Devuelve un valor entero n donde 1 <= n <= 5.
 *)
 var
   dimension: integer;
@@ -118,20 +129,21 @@ begin
     write(msj);
     readln(dimension);
     if (dimension < tope1) OR (dimension > tope2)  then
-    begin
-      writeln('ERROR: dimension inválida. se espera que el valor ingresado sea entre 1 y 5.');
-    end;   
+      begin
+        writeln('ERROR: dimension inválida. se espera que el valor ingresado sea entre 1 y 5.');
+      end;   
   until (dimension in [tope1..tope2]);
   LeerDimension := dimension  
 end;
-
 {-----------------------------------------------------------}
-
 function Preguntar (msj:string):boolean;
 (*
-Qué hace: le mustra un mensaje al usuario para que esté lo responda 
-PRE: ----
-POS: preguntar = verdadero o preguntar = falso
+Qué hace: 
+  le mustra un mensaje al usuario para que esté lo responda por [S,s,N,n]
+Precondición: 
+  M=msj ∈ dato estructurado
+Postcondición: 
+  Preguntar = Verdadero o Falso
 *)
 var
     respuesta:char;
@@ -145,9 +157,7 @@ begin
       Preguntar := FALSE
     else
       Preguntar := TRUE;
-
 end;
-
 {===========================================================}
 { PROGRAMA PRINCIPAL }
 (*
@@ -160,10 +170,8 @@ end;
   Precondición:
     Ninguna.
   Postcondición:
-    El programa finaliza cuando el usuario responde 'N' en
-    las consultas de continuar.
+    Ninguna
 *)
-
 var
   caracter: char;
   dimension: integer;
@@ -176,7 +184,7 @@ begin
   begin
     caracter := LeerCaracter('Ingrese un caracter: ');
     dimension:= LeerDimension('Ingrese una dimension entre (1 y 5): ', 1,5);
-    DibujarLoteRec(caracter,dimension,5);
+    DibujarLoteRec(caracter,dimension);
     continuarPrograma := Preguntar('Desea iniciar otro dibujo?')
   end;
 
